@@ -51,6 +51,13 @@ public class SpellingBee {
     //  that will find the substrings recursively.
     public void sort() {
         // YOUR CODE HERE
+        // recurive method
+        mergeSort();
+
+    }
+    public boolean mergeSort(){
+
+        return false;
     }
 
     // Removes duplicates from the sorted list.
@@ -69,6 +76,34 @@ public class SpellingBee {
     //  If it is not in the dictionary, remove it from words.
     public void checkWords() {
         // YOUR CODE HERE
+        // goes through each word in the list
+        for (int i = 0; i < words.size(); i++){
+            // use binary search
+            // if not in dictionary then words removed
+            if(!binarySearch(words.get(i), 0, DICTIONARY_SIZE-1)){
+                words.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public boolean binarySearch(String word, int start, int end){
+        if (start == end){
+            // check again for that word
+            // return if that string is the string I am looking for
+            return word.equals(DICTIONARY[start]);
+        }
+        int mid = start + (end - start)/2;
+        if (word.compareTo(DICTIONARY[mid]) < 0){
+            return binarySearch(word, start, mid -1);
+        }
+        else if (word.compareTo(DICTIONARY[mid]) > 0){
+            return binarySearch(word,mid +1, end);
+        }
+        else if (word.equals(DICTIONARY[mid])){
+            return true;
+        }
+        return false;
     }
 
     // Prints all valid words to wordList.txt
