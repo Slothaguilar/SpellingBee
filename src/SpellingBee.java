@@ -38,9 +38,9 @@ public class SpellingBee {
     public SpellingBee(String letters) {
         this.letters = letters;
         words = new ArrayList<String>();
-        words.add("c");
-        words.add("a");
-        words.add("b");
+//        words.add("c");
+//        words.add("a");
+//        words.add("b");
     }
 
     // TODO: generate all possible substrings and permutations of the letters.
@@ -58,13 +58,30 @@ public class SpellingBee {
     //It is okay to have duplicate words if the given letters contain duplicates. These duplicate
     // words will be removed later by the given method removeDuplicates()
     public void makeWords(String word, String letters) {
-        if(letters.isEmpty()){
-            words.add(word);
-        }
-        for(int i = 0; i< letters.length(); i++){
-            // makeWords(letters.substring(i,i+1), letters.substring(i++));
-            makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i+1));
+//        if(letters.isEmpty()){
+//            if (!words.contains(word)) {
+//                words.add(word);
+//                System.out.println(word);
+//            }
+////            words.add(word);
+////            System.out.println(word);
+//        }
+//        for(int i = 0; i< letters.length(); i++){
+//            // makeWords(letters.substring(i,i+1), letters.substring(i++));
+//            makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i+1));
+//
+//        }
 
+        if (word.length() >= 2 && binarySearch(word, 0, DICTIONARY_SIZE - 1)) {
+            words.add(word);
+            removeDuplicates();
+            System.out.println(word);
+        }
+        if (!letters.isEmpty()) {
+            for (int i = 0; i < letters.length(); i++) {
+                makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i + 1));
+                removeDuplicates();
+            }
         }
 
     }
@@ -74,59 +91,58 @@ public class SpellingBee {
     public void sort() {
         // YOUR CODE HERE
         // recurive method
-       words = mergesort(0, words.size()-1);
+       words = mergesort(words);
 
 
     }
-
-    public ArrayList<String> mergesort(int low, int high){
-        if (high - low == 0){
-            ArrayList<String> newArray = new ArrayList<>();
-            //newArray.set(0,words.get(low));
-            newArray.add(words.get(low));
-            return newArray;
+    private ArrayList<String> mergesort(ArrayList<String> arr) {
+        if (arr.size() <= 1) {
+            return arr;
         }
-        int med = (high + low) / 2;
-        ArrayList<String> arr1 = mergesort(low, med);
-        ArrayList<String> arr2 = mergesort(med + 1, high);
+
+        int mid = arr.size() / 2;
+        ArrayList<String> arr1 = new ArrayList<>(arr.subList(0, mid));
+        ArrayList<String> arr2 = new ArrayList<>(arr.subList(mid, arr.size()));
+
+        arr1 = mergesort(arr1);
+        arr2 = mergesort(arr2);
+
         return merge(arr1, arr2);
     }
-    public ArrayList<String> merge(ArrayList<String> arr1, ArrayList<String> arr2) {
-        ArrayList<String> array = new ArrayList<String>();
-        int index1 = 0, index2 = 0, count = 0;
 
-        while (index1 < arr1.size() && index2 < arr2.size()) {
-            if(arr1.get(index1).compareTo(arr2.get(index2)) < 0) {
-                array.set(count,arr1.get(index1++));
+    private ArrayList<String> merge(ArrayList<String> arr1, ArrayList<String> arr2) {
+        ArrayList<String> merged = new ArrayList<>();
+        int arr1Index = 0;
+        int arr2Index = 0;
+
+        while (arr1Index < arr1.size() && arr2Index < arr2.size()) {
+            if (arr1.get(arr1Index).compareTo(arr2.get(arr2Index)) < 0) {
+                merged.add(arr1.get(arr1Index++));
             } else {
-                array.set(count,arr1.get(index2++));
+                merged.add(arr2.get(arr2Index++));
             }
-            count++;
-        }
-        // Copy over any remaining elements
-        while (index1 < arr1.size()) {
-            array.set(count++, arr1.get(index1++));
         }
 
-        while (index2 < arr2.size()) {
-            array.set(count++, arr2.get(index2++));
+        while (arr1Index < arr1.size()) {
+            merged.add(arr1.get(arr1Index++));
         }
 
-        return array;
+        while (arr2Index < arr2.size()) {
+            merged.add(arr2.get(arr2Index++));
+        }
+
+        return merged;
     }
-
-
-
 
     // Removes duplicates from the sorted list.
     public void removeDuplicates() {
-        int i = 0;
-        while (i < words.size() - 1) {
-            String word = words.get(i);
-            if (word.equals(words.get(i + 1)))
-                words.remove(i + 1);
+        int index = 0;
+        while (index < words.size()-1) {
+            String word = words.get(index);
+            if (word.equals(words.get(index + 1)))
+                words.remove(index + 1);
             else
-                i++;
+                index++;
         }
     }
 
@@ -135,33 +151,31 @@ public class SpellingBee {
     public void checkWords() {
         // YOUR CODE HERE
         // goes through each word in the list
-        for (int i = 0; i < words.size(); i++){
+        // goes through each word in the list
+        for (String word : words) {
             // use binary search
             // if not in dictionary then words removed
-            if(!binarySearch(words.get(i), 0, DICTIONARY_SIZE-1)){
-                words.remove(i);
-                i--;
+            if (!binarySearch(word, 0, DICTIONARY_SIZE - 1)) {
+                words.remove(word);
             }
         }
+        // Remove words not found in the dictionary
     }
 
     public boolean binarySearch(String word, int start, int end){
-        if (start == end){
-            // check again for that word
-            // return if that string is the string I am looking for
-            return word.equals(DICTIONARY[start]);
+        if (start <= end){
+            int mid = start + (end - start) / 2;
+            int comparisonResult = word.compareTo(DICTIONARY[mid]);
+
+            if (comparisonResult == 0) {
+                return true; // Word found
+            } else if (comparisonResult < 0) {
+                return binarySearch(word, start, mid - 1); // Search left half
+            } else {
+                return binarySearch(word, mid + 1, end); // Search right half
+            }
         }
-        int mid = start + (end - start)/2;
-        if (word.compareTo(DICTIONARY[mid]) < 0){
-            return binarySearch(word, start, mid -1);
-        }
-        else if (word.compareTo(DICTIONARY[mid]) > 0){
-            return binarySearch(word,mid +1, end);
-        }
-        else if (word.equals(DICTIONARY[mid])){
-            return true;
-        }
-        return false;
+        return false; // Word not found
     }
 
     // Prints all valid words to wordList.txt
