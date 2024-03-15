@@ -58,30 +58,11 @@ public class SpellingBee {
     //It is okay to have duplicate words if the given letters contain duplicates. These duplicate
     // words will be removed later by the given method removeDuplicates()
     public void makeWords(String word, String letters) {
-//        if(letters.isEmpty()){
-//            if (!words.contains(word)) {
-//                words.add(word);
-//                System.out.println(word);
-//            }
-////            words.add(word);
-////            System.out.println(word);
-//        }
-//        for(int i = 0; i< letters.length(); i++){
-//            // makeWords(letters.substring(i,i+1), letters.substring(i++));
-//            makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i+1));
-//
-//        }
+        words.add(word);
 
-        if (word.length() >= 2 && binarySearch(word, 0, DICTIONARY_SIZE - 1)) {
-            words.add(word);
-            removeDuplicates();
-            System.out.println(word);
-        }
-        if (!letters.isEmpty()) {
-            for (int i = 0; i < letters.length(); i++) {
-                makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i + 1));
-                removeDuplicates();
-            }
+        for(int i = 0; i< letters.length(); i++){
+            makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i+1));
+
         }
 
     }
@@ -92,7 +73,9 @@ public class SpellingBee {
         // YOUR CODE HERE
         // recurive method
        words = mergesort(words);
-
+//       for (int i = 0; i < words.size(); i++){
+//           System.out.println(words.get(i));
+//       }
 
     }
     private ArrayList<String> mergesort(ArrayList<String> arr) {
@@ -152,11 +135,10 @@ public class SpellingBee {
         // YOUR CODE HERE
         // goes through each word in the list
         // goes through each word in the list
-        for (String word : words) {
-            // use binary search
-            // if not in dictionary then words removed
-            if (!binarySearch(word, 0, DICTIONARY_SIZE - 1)) {
-                words.remove(word);
+        for (int i = 0; i< words.size(); i++) {
+            if (!binarySearch(words.get(i), 0, DICTIONARY_SIZE - 1)) {
+                words.remove(words.get(i));
+                i--;
             }
         }
         // Remove words not found in the dictionary
