@@ -22,7 +22,7 @@ import java.util.Scanner;
  * It utilizes recursion to generate the strings, mergesort to sort them, and
  * binary search to find them in a dictionary.
  *
- * @author Zach Blick, [ADD YOUR NAME HERE]
+ * @author Zach Blick, Sofia Aguilar
  *
  * Written on March 5, 2023 for CS2 @ Menlo School
  *
@@ -38,9 +38,6 @@ public class SpellingBee {
     public SpellingBee(String letters) {
         this.letters = letters;
         words = new ArrayList<String>();
-//        words.add("c");
-//        words.add("a");
-//        words.add("b");
     }
 
     // TODO: generate all possible substrings and permutations of the letters.
@@ -51,18 +48,10 @@ public class SpellingBee {
         makeWords("", letters);
 
     }
-    // Generate should call another method: a recursive method. This recursive method should
-    // take in at least one parameter. It is okay for this method to use some iteration so long as it is still recursive.
-    //You do not need to generate the words in any particular order, but you do need to generate
-    // all of them.
-    //It is okay to have duplicate words if the given letters contain duplicates. These duplicate
-    // words will be removed later by the given method removeDuplicates()
     public void makeWords(String word, String letters) {
         words.add(word);
-
         for(int i = 0; i< letters.length(); i++){
             makeWords(word + letters.charAt(i), letters.substring(0, i) + letters.substring(i+1));
-
         }
 
     }
@@ -71,11 +60,7 @@ public class SpellingBee {
     //  that will find the substrings recursively.
     public void sort() {
         // YOUR CODE HERE
-        // recurive method
        words = mergesort(words);
-//       for (int i = 0; i < words.size(); i++){
-//           System.out.println(words.get(i));
-//       }
 
     }
     private ArrayList<String> mergesort(ArrayList<String> arr) {
@@ -133,15 +118,12 @@ public class SpellingBee {
     //  If it is not in the dictionary, remove it from words.
     public void checkWords() {
         // YOUR CODE HERE
-        // goes through each word in the list
-        // goes through each word in the list
         for (int i = 0; i< words.size(); i++) {
             if (!binarySearch(words.get(i), 0, DICTIONARY_SIZE - 1)) {
                 words.remove(words.get(i));
                 i--;
             }
         }
-        // Remove words not found in the dictionary
     }
 
     public boolean binarySearch(String word, int start, int end){
@@ -150,14 +132,14 @@ public class SpellingBee {
             int comparisonResult = word.compareTo(DICTIONARY[mid]);
 
             if (comparisonResult == 0) {
-                return true; // Word found
+                return true;
             } else if (comparisonResult < 0) {
-                return binarySearch(word, start, mid - 1); // Search left half
+                return binarySearch(word, start, mid - 1);
             } else {
-                return binarySearch(word, mid + 1, end); // Search right half
+                return binarySearch(word, mid + 1, end);
             }
         }
-        return false; // Word not found
+        return false;
     }
 
     // Prints all valid words to wordList.txt
