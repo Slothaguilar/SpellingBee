@@ -63,14 +63,21 @@ public class SpellingBee {
        words = mergesort(words);
 
     }
-    private ArrayList<String> mergesort(ArrayList<String> arr) {
+
+    public ArrayList<String> mergesort(ArrayList<String> arr) {
         if (arr.size() <= 1) {
             return arr;
         }
 
         int mid = arr.size() / 2;
-        ArrayList<String> arr1 = new ArrayList<>(arr.subList(0, mid));
-        ArrayList<String> arr2 = new ArrayList<>(arr.subList(mid, arr.size()));
+        ArrayList<String> arr1 = new ArrayList<>();
+        for (int i = 0; i < mid; i++) {
+            arr1.add(arr.get(i));
+        }
+        ArrayList<String> arr2 = new ArrayList<>();
+        for (int i = mid; i < arr.size(); i++) {
+            arr2.add(arr.get(i));
+        }
 
         arr1 = mergesort(arr1);
         arr2 = mergesort(arr2);
@@ -78,7 +85,7 @@ public class SpellingBee {
         return merge(arr1, arr2);
     }
 
-    private ArrayList<String> merge(ArrayList<String> arr1, ArrayList<String> arr2) {
+    public ArrayList<String> merge(ArrayList<String> arr1, ArrayList<String> arr2) {
         ArrayList<String> merged = new ArrayList<>();
         int arr1Index = 0;
         int arr2Index = 0;
